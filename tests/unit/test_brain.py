@@ -1,4 +1,4 @@
-from app.core.brain import process_command,is_exit_command
+from app.core.brain import process_command,is_exit_command,get_help_message
 
 
 def test_hello():
@@ -82,3 +82,9 @@ def test_not_exit_command():
     result = is_exit_command("hello")
 
     assert result is False
+
+def test_help_message():
+
+    result = get_help_message()
+
+    assert result == "Available commands: hello, help, exit"

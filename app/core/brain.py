@@ -3,6 +3,13 @@ HELP_COMMAND = "help"
 EXIT_COMMAND = "exit"
 
 
+AVAILABLE_COMMANDS = [
+    HELLO_COMMAND,
+    HELP_COMMAND,
+    EXIT_COMMAND
+]
+
+
 def process_command(command):
 
     command = command.strip().lower()
@@ -26,6 +33,10 @@ def handle_command(command):
 
     else:
         return "I don't understand that command yet."
+
+def get_help_message():
+
+    return "Available commands: " + ", ".join(AVAILABLE_COMMANDS)
 
 def is_exit_command(command):
 
