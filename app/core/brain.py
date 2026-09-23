@@ -1,9 +1,14 @@
 def process_command(command):
 
-    command = command.strip().lower()
-
     if not command:
         return "Please enter a command."
+
+    return handle_command(command)
+
+
+def handle_command(command):
+
+    command = command.strip().lower()
 
     if command == "hello":
         return "Hello! How can I help you?"
