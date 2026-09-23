@@ -1,4 +1,4 @@
-from app.core.brain import process_command
+from app.core.brain import process_command,is_exit_command
 
 
 def test_hello():
@@ -54,3 +54,31 @@ def test_hello_with_spaces():
     result = process_command("   hello   ")
 
     assert result == "Hello! How can I help you?"
+
+
+def test_exit_command():
+
+    result = is_exit_command("exit")
+
+    assert result is True
+
+
+def test_exit_command_uppercase():
+
+    result = is_exit_command("EXIT")
+
+    assert result is True
+
+
+def test_exit_command_with_spaces():
+
+    result = is_exit_command("   exit   ")
+
+    assert result is True
+
+
+def test_not_exit_command():
+
+    result = is_exit_command("hello")
+
+    assert result is False

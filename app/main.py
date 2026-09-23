@@ -1,4 +1,4 @@
-from app.core.brain import process_command
+from app.core.brain import process_command, is_exit_command
 
 
 def start_zyro():
@@ -13,5 +13,5 @@ def start_zyro():
 
         print("Zyro:", response)
 
-        if command.strip().lower() == "exit":
+        if is_exit_command(command):
             break

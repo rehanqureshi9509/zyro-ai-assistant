@@ -26,3 +26,9 @@ def handle_command(command):
 
     else:
         return "I don't understand that command yet."
+
+def is_exit_command(command):
+
+    command = command.strip().lower()
+
+    return command == EXIT_COMMAND
