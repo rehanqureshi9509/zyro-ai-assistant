@@ -34,3 +34,23 @@ def test_unknown_command():
     result = process_command("xyz")
 
     assert result == "I don't understand that command yet."
+
+def test_hello_uppercase():
+
+    result = process_command("HELLO")
+
+    assert result == "Hello! How can I help you?"
+
+
+def test_hello_mixed_case():
+
+    result = process_command("HeLLo")
+
+    assert result == "Hello! How can I help you?"
+
+
+def test_hello_with_spaces():
+
+    result = process_command("   hello   ")
+
+    assert result == "Hello! How can I help you?"

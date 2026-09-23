@@ -1,4 +1,11 @@
+HELLO_COMMAND = "hello"
+HELP_COMMAND = "help"
+EXIT_COMMAND = "exit"
+
+
 def process_command(command):
+
+    command = command.strip().lower()
 
     if not command:
         return "Please enter a command."
@@ -8,15 +15,13 @@ def process_command(command):
 
 def handle_command(command):
 
-    command = command.strip().lower()
-
-    if command == "hello":
+    if command == HELLO_COMMAND:
         return "Hello! How can I help you?"
 
-    elif command == "help":
+    elif command == HELP_COMMAND:
         return "Available commands: hello, help, exit"
 
-    elif command == "exit":
+    elif command == EXIT_COMMAND:
         return "Goodbye!"
 
     else:

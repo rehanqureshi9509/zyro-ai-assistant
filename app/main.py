@@ -9,11 +9,9 @@ def start_zyro():
 
         command = input("You: ")
 
-        command = command.strip().lower()
-
         response = process_command(command)
 
         print("Zyro:", response)
 
-        if command == "exit":
+        if command.strip().lower() == "exit":
             break
