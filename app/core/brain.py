@@ -1,10 +1,12 @@
 from datetime import datetime
+from app.tools.windows.applications import open_notepad
 
 HELLO_COMMAND = "hello"
 HELP_COMMAND = "help"
 EXIT_COMMAND = "exit"
 TIME_COMMAND = "time"
 DATE_COMMAND = "date"
+OPEN_NOTEPAD_COMMAND = "open notepad"
 
 
 AVAILABLE_COMMANDS = [
@@ -12,7 +14,8 @@ AVAILABLE_COMMANDS = [
     HELP_COMMAND,
     EXIT_COMMAND,
     TIME_COMMAND,
-    DATE_COMMAND
+    DATE_COMMAND,
+    OPEN_NOTEPAD_COMMAND
 ]
 
 UNKNOWN_COMMAND_RESPONSE = (
@@ -50,7 +53,8 @@ COMMANDS = {
     HELP_COMMAND: handle_help,
     EXIT_COMMAND: handle_exit,
     TIME_COMMAND: handle_time,
-    DATE_COMMAND: handle_date
+    DATE_COMMAND: handle_date,
+    OPEN_NOTEPAD_COMMAND: open_notepad
 }
 
 def process_command(command):

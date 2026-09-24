@@ -1,4 +1,5 @@
-from app.core.brain import process_command,is_exit_command,get_help_message
+from app.core.brain import process_command,is_exit_command,get_help_message,COMMANDS
+from app.tools.windows.applications import open_notepad
 
 
 def test_hello():
@@ -12,7 +13,7 @@ def test_help():
 
     result = process_command("help")
 
-    assert result == "Available commands: hello, help, exit, time, date"
+    assert result == "Available commands: hello, help, exit, time, date, open notepad"
 
 
 def test_exit():
@@ -90,7 +91,7 @@ def test_help_message():
 
     result = get_help_message()
 
-    assert result == "Available commands: hello, help, exit, time, date"
+    assert result == "Available commands: hello, help, exit, time, date, open notepad"
 
 def test_time_command():
 
@@ -103,3 +104,9 @@ def test_date_command():
     result = process_command("date")
 
     assert result.startswith("Today's date is ")
+
+def test_open_notepad_command():
+
+    handler = COMMANDS.get("open notepad")
+
+    assert handler == open_notepad
