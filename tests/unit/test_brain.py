@@ -13,7 +13,7 @@ def test_help():
 
     result = process_command("help")
 
-    assert result == "Available commands: hello, help, exit, time, date, open notepad"
+    assert result == "Available commands: hello, help, exit, time, date, open notepad, open calculator, open chrome"
 
 
 def test_exit():
@@ -91,7 +91,7 @@ def test_help_message():
 
     result = get_help_message()
 
-    assert result == "Available commands: hello, help, exit, time, date, open notepad"
+    assert result == "Available commands: hello, help, exit, time, date, open notepad, open calculator, open chrome"
 
 def test_time_command():
 
