@@ -33,7 +33,10 @@ def test_unknown_command():
 
     result = process_command("xyz")
 
-    assert result == "I don't understand that command yet."
+    assert result == (
+        "I don't understand that command yet. "
+        "Type 'help' to see available commands."
+    )
 
 def test_hello_uppercase():
 

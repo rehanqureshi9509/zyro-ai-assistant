@@ -9,6 +9,33 @@ AVAILABLE_COMMANDS = [
     EXIT_COMMAND
 ]
 
+UNKNOWN_COMMAND_RESPONSE = (
+    "I don't understand that command yet. "
+    "Type 'help' to see available commands."
+)
+
+
+def get_help_message():
+    return "Available commands: " + ", ".join(AVAILABLE_COMMANDS)
+
+
+def handle_hello():
+    return "Hello! How can I help you?"
+
+
+def handle_help():
+    return get_help_message()
+
+
+def handle_exit():
+    return "Goodbye!"
+
+
+COMMANDS = {
+    HELLO_COMMAND: handle_hello,
+    HELP_COMMAND: handle_help,
+    EXIT_COMMAND: handle_exit
+}
 
 def process_command(command):
 
@@ -17,26 +44,14 @@ def process_command(command):
     if not command:
         return "Please enter a command."
 
-    return handle_command(command)
+    handler = COMMANDS.get(command)
+
+    if handler:
+        return handler()
+
+    return UNKNOWN_COMMAND_RESPONSE
 
 
-def handle_command(command):
-
-    if command == HELLO_COMMAND:
-        return "Hello! How can I help you?"
-
-    elif command == HELP_COMMAND:
-        return "Available commands: hello, help, exit"
-
-    elif command == EXIT_COMMAND:
-        return "Goodbye!"
-
-    else:
-        return "I don't understand that command yet."
-
-def get_help_message():
-
-    return "Available commands: " + ", ".join(AVAILABLE_COMMANDS)
 
 def is_exit_command(command):
 
