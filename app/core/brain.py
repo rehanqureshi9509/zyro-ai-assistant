@@ -1,12 +1,16 @@
+from datetime import datetime
+
 HELLO_COMMAND = "hello"
 HELP_COMMAND = "help"
 EXIT_COMMAND = "exit"
+TIME_COMMAND = "time"
 
 
 AVAILABLE_COMMANDS = [
     HELLO_COMMAND,
     HELP_COMMAND,
-    EXIT_COMMAND
+    EXIT_COMMAND,
+    TIME_COMMAND
 ]
 
 UNKNOWN_COMMAND_RESPONSE = (
@@ -30,11 +34,16 @@ def handle_help():
 def handle_exit():
     return "Goodbye!"
 
+def handle_time():
+    current_time = datetime.now()
+    return current_time.strftime("Current time is %I:%M %p")
+
 
 COMMANDS = {
     HELLO_COMMAND: handle_hello,
     HELP_COMMAND: handle_help,
-    EXIT_COMMAND: handle_exit
+    EXIT_COMMAND: handle_exit,
+    TIME_COMMAND: handle_time
 }
 
 def process_command(command):
