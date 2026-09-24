@@ -15,3 +15,9 @@ def start_zyro():
 
         if is_exit_command(command):
             break
+
+
+# git command 
+
+# cd ~/Desktop/"zyro ai assistant"
+# source venv/Scripts/activate
