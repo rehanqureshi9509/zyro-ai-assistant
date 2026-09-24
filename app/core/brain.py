@@ -4,13 +4,15 @@ HELLO_COMMAND = "hello"
 HELP_COMMAND = "help"
 EXIT_COMMAND = "exit"
 TIME_COMMAND = "time"
+DATE_COMMAND = "date"
 
 
 AVAILABLE_COMMANDS = [
     HELLO_COMMAND,
     HELP_COMMAND,
     EXIT_COMMAND,
-    TIME_COMMAND
+    TIME_COMMAND,
+    DATE_COMMAND
 ]
 
 UNKNOWN_COMMAND_RESPONSE = (
@@ -38,12 +40,17 @@ def handle_time():
     current_time = datetime.now()
     return current_time.strftime("Current time is %I:%M %p")
 
+def handle_date():
+    current_date = datetime.now()
+    return current_date.strftime("Today's date is %d %B %Y")
+
 
 COMMANDS = {
     HELLO_COMMAND: handle_hello,
     HELP_COMMAND: handle_help,
     EXIT_COMMAND: handle_exit,
-    TIME_COMMAND: handle_time
+    TIME_COMMAND: handle_time,
+    DATE_COMMAND: handle_date
 }
 
 def process_command(command):

@@ -12,7 +12,7 @@ def test_help():
 
     result = process_command("help")
 
-    assert result == "Available commands: hello, help, exit, time"
+    assert result == "Available commands: hello, help, exit, time, date"
 
 
 def test_exit():
@@ -90,10 +90,16 @@ def test_help_message():
 
     result = get_help_message()
 
-    assert result == "Available commands: hello, help, exit, time"
+    assert result == "Available commands: hello, help, exit, time, date"
 
 def test_time_command():
 
     result = process_command("time")
 
     assert result.startswith("Current time is ")
+
+def test_date_command():
+
+    result = process_command("date")
+
+    assert result.startswith("Today's date is ")
