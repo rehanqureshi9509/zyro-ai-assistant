@@ -44,3 +44,26 @@ def test_brain_handles_invalid_arguments():
         "Missing required argument "
         "'file_path' for tool 'file_exists'."
     )
+
+
+def test_brain_blocks_shutdown_without_confirmation():
+
+    result = process_ai_tool_call({
+        "name": "shutdown_computer",
+        "arguments": {}
+    })
+
+    assert result == (
+        "Confirmation required to execute 'shutdown_computer'."
+    )
+
+
+def test_brain_blocks_invalid_confirmation_value():
+
+    result = process_ai_tool_call({
+        "name": "shutdown_computer",
+        "arguments": {},
+        "confirmed": "yes"
+    })
+
+    assert result == "Confirmation value must be a boolean."

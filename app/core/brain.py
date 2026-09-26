@@ -1,6 +1,7 @@
 from datetime import datetime
 from app.ai.tool_calling import execute_tool_call
 from app.tools.registry import execute_tool
+from app.core.permissions import check_tool_permission
 
 
 HELLO_COMMAND = "hello"
@@ -344,6 +345,30 @@ def is_exit_command(command):
 
 def process_ai_tool_call(tool_call):
 
-    result = execute_tool_call(tool_call)
+    if not isinstance(tool_call, dict):
+        return "Invalid tool call."
 
-    return result
+    function_data = tool_call.get("function", tool_call)
+
+    if not isinstance(function_data, dict):
+        return "Invalid function data."
+
+    tool_name = function_data.get("name")
+
+    if not isinstance(tool_name, str) or not tool_name.strip():
+        return "Tool name is missing or invalid."
+
+    confirmed = tool_call.get("confirmed", False)
+
+    if not isinstance(confirmed, bool):
+        return "Confirmation value must be a boolean."
+
+    allowed, message = check_tool_permission(
+        tool_name,
+        confirmed
+    )
+
+    if not allowed:
+        return message
+
+    return execute_tool_call(tool_call)
