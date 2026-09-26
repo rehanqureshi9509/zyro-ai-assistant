@@ -64,6 +64,69 @@ def get_all_tool_metadata():
     return TOOL_METADATA.copy()
 
 
+def get_tool_schema(name):
+
+    metadata = get_tool_metadata(name)
+
+    if metadata is None:
+        return None
+
+    parameters = metadata.get("parameters", {})
+
+    properties = {}
+
+    for parameter_name, parameter_type in parameters.items():
+
+        if parameter_type == "str":
+            json_type = "string"
+
+        elif parameter_type == "int":
+            json_type = "integer"
+
+        elif parameter_type == "float":
+            json_type = "number"
+
+        elif parameter_type == "bool":
+            json_type = "boolean"
+
+        else:
+            json_type = "string"
+
+        properties[parameter_name] = {
+            "type": json_type,
+            "description": f"Value for {parameter_name}"
+        }
+
+    return {
+        "type": "function",
+        "function": {
+            "name": name,
+            "description": metadata["description"],
+            "parameters": {
+                "type": "object",
+                "properties": properties,
+                "required": list(parameters.keys())
+            }
+        }
+    }
+
+
+def get_all_tool_schemas():
+
+    tools = get_all_tools()
+
+    schemas = []
+
+    for tool_name in tools:
+
+        schema = get_tool_schema(tool_name)
+
+        if schema is not None:
+            schemas.append(schema)
+
+    return schemas
+
+
 # Register Windows application tools
 
 register_tool(

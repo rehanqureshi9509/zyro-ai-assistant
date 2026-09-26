@@ -5,7 +5,9 @@ from app.tools.registry import (
     get_all_tools,
     execute_tool,
     get_tool_metadata,
-    get_all_tool_metadata
+    get_all_tool_metadata,
+    get_tool_schema,
+    get_all_tool_schemas
 )
 
 from app.tools.windows.applications import (
@@ -238,3 +240,76 @@ def test_all_registered_metadata_is_valid():
     errors = validate_all_tools()
 
     assert errors == []
+
+
+# 14. Get OpenAI-compatible schema for a tool
+
+def test_get_tool_schema():
+
+    schema = get_tool_schema("open_chrome")
+
+    assert schema == {
+        "type": "function",
+        "function": {
+            "name": "open_chrome",
+            "description": "Opens Google Chrome.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
+    }
+
+
+# 15. Get schema for a tool with parameters
+
+def test_get_file_tool_schema():
+
+    schema = get_tool_schema("file_exists")
+
+    assert schema["type"] == "function"
+
+    function_schema = schema["function"]
+
+    assert function_schema["name"] == "file_exists"
+
+    assert function_schema["parameters"]["properties"] == {
+        "file_path": {
+            "type": "string",
+            "description": "Value for file_path"
+        }
+    }
+
+    assert function_schema["parameters"]["required"] == [
+        "file_path"
+    ]
+
+
+# 16. Get schema for a missing tool
+
+def test_get_missing_tool_schema():
+
+    result = get_tool_schema("missing_tool")
+
+    assert result is None
+
+
+# 17. Get schemas for all registered tools
+
+def test_get_all_tool_schemas():
+
+    schemas = get_all_tool_schemas()
+
+    assert isinstance(schemas, list)
+
+    assert len(schemas) >= 13
+
+    schema_names = [
+        item["function"]["name"]
+        for item in schemas
+    ]
+
+    assert "open_chrome" in schema_names
+    assert "search_file" in schema_names
+    assert "create_directory" in schema_names
