@@ -1,26 +1,39 @@
 import os
+import shutil
 import subprocess
 
 
 APPLICATIONS = {
     "notepad": "notepad.exe",
     "calculator": "calc.exe",
-    "chrome": r"C:\Program Files\Google\Chrome\Application\chrome.exe"
-    
+    "chrome": "chrome.exe",
+    "vscode": "code.exe"
 }
 
 
-def open_application(application_name):
+def find_application(application_name):
 
     application = APPLICATIONS.get(application_name)
 
     if not application:
-        return f"I don't know how to open {application_name}."
+        return None
 
-    if not os.path.exists(application) and application_name == "chrome":
-        return "Chrome executable was not found."
+    application_path = shutil.which(application)
 
-    subprocess.Popen([application])
+    if application_path:
+        return application_path
+
+    return None
+
+
+def open_application(application_name):
+
+    application_path = find_application(application_name)
+
+    if not application_path:
+        return f"I could not find {application_name} on this computer."
+
+    subprocess.Popen([application_path])
 
     return f"Opening {application_name}..."
 
@@ -38,3 +51,8 @@ def open_calculator():
 def open_chrome():
 
     return open_application("chrome")
+
+
+def open_vscode():
+
+    return open_application("vscode")
