@@ -1,6 +1,8 @@
 from app.tools.validator import (
     validate_tool_metadata,
-    validate_all_tools
+    validate_all_tools,
+    validate_tool_schema,
+    validate_tool_registry
 )
 
 
@@ -128,3 +130,34 @@ def test_validate_all_registered_tools():
     errors = validate_all_tools()
 
     assert errors == []
+
+
+def test_all_registered_tool_schemas_are_valid():
+
+    errors = validate_tool_registry()
+
+    assert errors == []
+
+
+def test_file_exists_schema_is_valid():
+
+    errors = validate_tool_schema("file_exists")
+
+    assert errors == []
+
+
+def test_search_file_schema_is_valid():
+
+    errors = validate_tool_schema("search_file")
+
+    assert errors == []
+
+
+def test_registry_contains_unique_tool_names():
+
+    from app.tools.registry import get_all_tools
+
+    tools = get_all_tools()
+
+    assert len(tools) > 0
+    assert len(set(tools)) == len(tools)
