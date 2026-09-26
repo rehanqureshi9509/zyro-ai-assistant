@@ -62,62 +62,63 @@ def get_tool_metadata(name):
 def get_all_tool_metadata():
 
     return TOOL_METADATA.copy()
-
-
 def get_tool_schema(name):
 
     metadata = get_tool_metadata(name)
 
-    if metadata is None:
+    if not isinstance(metadata, dict):
         return None
 
+    description = metadata.get("description", "")
     parameters = metadata.get("parameters", {})
+    optional_parameters = metadata.get("optional_parameters", [])
+
+    if not isinstance(parameters, dict):
+        return None
+
+    if not isinstance(optional_parameters, list):
+        return None
 
     properties = {}
 
     for parameter_name, parameter_type in parameters.items():
 
-        if parameter_type == "str":
-            json_type = "string"
-
-        elif parameter_type == "int":
-            json_type = "integer"
-
-        elif parameter_type == "float":
-            json_type = "number"
-
-        elif parameter_type == "bool":
-            json_type = "boolean"
-
-        else:
-            json_type = "string"
+        json_type = {
+            "str": "string",
+            "int": "integer",
+            "float": "number",
+            "bool": "boolean"
+        }.get(parameter_type, "string")
 
         properties[parameter_name] = {
             "type": json_type,
             "description": f"Value for {parameter_name}"
         }
 
+    required_parameters = [
+        parameter_name
+        for parameter_name in parameters
+        if parameter_name not in optional_parameters
+    ]
+
     return {
         "type": "function",
         "function": {
             "name": name,
-            "description": metadata["description"],
+            "description": description,
             "parameters": {
                 "type": "object",
                 "properties": properties,
-                "required": list(parameters.keys())
+                "required": required_parameters
             }
         }
     }
 
-
 def get_all_tool_schemas():
-
-    tools = get_all_tools()
 
     schemas = []
 
-    for tool_name in tools:
+    for tool_name in get_all_tools():
 
         schema = get_tool_schema(tool_name)
 
@@ -125,7 +126,6 @@ def get_all_tool_schemas():
             schemas.append(schema)
 
     return schemas
-
 
 # Register Windows application tools
 
@@ -206,7 +206,10 @@ register_tool(
         "parameters": {
             "file_name": "str",
             "search_directory": "str"
-        }
+        },
+        "optional_parameters": [
+            "search_directory"
+        ]
     }
 )
 

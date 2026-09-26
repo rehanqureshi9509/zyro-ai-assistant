@@ -43,7 +43,6 @@ def parse_tool_call(tool_call):
         "arguments": arguments
     }, None
 
-
 def validate_tool_call(tool_name, arguments):
 
     tool = get_tool(tool_name)
@@ -57,11 +56,24 @@ def validate_tool_call(tool_name, arguments):
         return f"Metadata for tool '{tool_name}' is missing."
 
     parameters = metadata.get("parameters")
+    optional_parameters = metadata.get("optional_parameters", [])
 
     if not isinstance(parameters, dict):
         return f"Invalid parameter metadata for '{tool_name}'."
 
-    # Check for unknown arguments
+    if not isinstance(optional_parameters, list):
+        return f"Invalid optional parameter metadata for '{tool_name}'."
+
+    # Check optional parameter definitions
+    for parameter_name in optional_parameters:
+
+        if parameter_name not in parameters:
+            return (
+                f"Optional parameter '{parameter_name}' "
+                f"is not defined for tool '{tool_name}'."
+            )
+
+    # Reject unknown arguments
     for argument_name in arguments:
 
         if argument_name not in parameters:
@@ -70,10 +82,14 @@ def validate_tool_call(tool_name, arguments):
                 f"for tool '{tool_name}'."
             )
 
-    # Check required arguments and basic types
+    # Check required arguments
     for parameter_name, parameter_type in parameters.items():
 
         if parameter_name not in arguments:
+
+            if parameter_name in optional_parameters:
+                continue
+
             return (
                 f"Missing required argument "
                 f"'{parameter_name}' for tool '{tool_name}'."
@@ -82,23 +98,44 @@ def validate_tool_call(tool_name, arguments):
         value = arguments[parameter_name]
 
         if parameter_type == "str":
+
             if not isinstance(value, str):
-                return f"Argument '{parameter_name}' must be a string."
+                return (
+                    f"Argument '{parameter_name}' "
+                    f"must be a string."
+                )
 
         elif parameter_type == "int":
+
             if isinstance(value, bool) or not isinstance(value, int):
-                return f"Argument '{parameter_name}' must be an integer."
+                return (
+                    f"Argument '{parameter_name}' "
+                    f"must be an integer."
+                )
 
         elif parameter_type == "float":
+
             if isinstance(value, bool) or not isinstance(value, (int, float)):
-                return f"Argument '{parameter_name}' must be a number."
+                return (
+                    f"Argument '{parameter_name}' "
+                    f"must be a number."
+                )
 
         elif parameter_type == "bool":
+
             if not isinstance(value, bool):
-                return f"Argument '{parameter_name}' must be a boolean."
+                return (
+                    f"Argument '{parameter_name}' "
+                    f"must be a boolean."
+                )
+
+        else:
+            return (
+                f"Unsupported parameter type "
+                f"'{parameter_type}' for '{parameter_name}'."
+            )
 
     return None
-
 
 def execute_tool_call(tool_call):
 

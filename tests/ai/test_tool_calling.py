@@ -173,3 +173,82 @@ def test_execute_openai_style_tool_call():
     })
 
     assert result == 30
+
+
+def test_search_file_directory_is_optional():
+
+    error = validate_tool_call(
+        "search_file",
+        {
+            "file_name": "main.py"
+        }
+    )
+
+    assert error is None
+
+
+def test_search_file_missing_required_argument():
+
+    error = validate_tool_call(
+        "search_file",
+        {}
+    )
+
+    assert error == (
+        "Missing required argument "
+        "'file_name' for tool 'search_file'."
+    )
+
+
+def test_search_file_rejects_unknown_argument():
+
+    error = validate_tool_call(
+        "search_file",
+        {
+            "file_name": "main.py",
+            "unknown": "value"
+        }
+    )
+
+    assert error == (
+        "Unknown argument 'unknown' for tool 'search_file'."
+    )
+
+
+def test_search_file_rejects_invalid_argument_type():
+
+    error = validate_tool_call(
+        "search_file",
+        {
+            "file_name": 123
+        }
+    )
+
+    assert error == "Argument 'file_name' must be a string."
+
+
+def test_search_file_schema_marks_directory_optional():
+
+    from app.tools.registry import get_tool_schema
+
+    schema = get_tool_schema("search_file")
+
+    parameters = schema["function"]["parameters"]
+
+    assert "file_name" in parameters["required"]
+
+    assert "search_directory" not in parameters["required"]
+
+
+def test_search_file_executes_without_directory():
+
+    result = execute_tool_call({
+        "name": "search_file",
+        "arguments": {
+            "file_name": "this_file_should_not_exist_zyro.txt"
+        }
+    })
+
+    assert result == (
+        "I could not find this_file_should_not_exist_zyro.txt."
+    )
