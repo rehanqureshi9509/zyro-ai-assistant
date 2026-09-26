@@ -67,3 +67,49 @@ def test_brain_blocks_invalid_confirmation_value():
     })
 
     assert result == "Confirmation value must be a boolean."
+
+def test_end_to_end_normal_tool_call():
+
+    result = process_ai_tool_call({
+        "name": "file_exists",
+        "arguments": {
+            "file_path": "zyro_test_file_not_found.txt"
+        }
+    })
+
+    assert result is False
+
+
+def test_end_to_end_blocks_system_tool_without_confirmation():
+
+    result = process_ai_tool_call({
+        "name": "shutdown_computer",
+        "arguments": {}
+    })
+
+    assert result == (
+        "Confirmation required to execute 'shutdown_computer'."
+    )
+
+
+def test_end_to_end_allows_confirmed_system_tool():
+
+    result = process_ai_tool_call({
+        "name": "shutdown_computer",
+        "arguments": {},
+        "confirmed": True
+    })
+
+    assert result == "Shutdown command is ready."
+
+
+def test_end_to_end_rejects_invalid_tool_arguments():
+
+    result = process_ai_tool_call({
+        "name": "file_exists",
+        "arguments": {
+            "file_path": 123
+        }
+    })
+
+    assert result == "Argument 'file_path' must be a string."
