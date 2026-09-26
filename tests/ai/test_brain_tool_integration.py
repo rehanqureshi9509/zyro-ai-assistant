@@ -1,0 +1,46 @@
+from app.core.brain import process_ai_tool_call
+from app.tools.registry import register_tool
+
+
+def test_brain_executes_ai_tool_call():
+
+    register_tool(
+        "brain_test_greeting",
+        lambda: "Hello from Zyro",
+        {
+            "description": "Returns a greeting.",
+            "parameters": {}
+        }
+    )
+
+    result = process_ai_tool_call({
+        "name": "brain_test_greeting",
+        "arguments": {}
+    })
+
+    assert result == "Hello from Zyro"
+
+
+def test_brain_handles_unknown_tool():
+
+    result = process_ai_tool_call({
+        "name": "unknown_brain_tool",
+        "arguments": {}
+    })
+
+    assert result == (
+        "Tool 'unknown_brain_tool' is not registered."
+    )
+
+
+def test_brain_handles_invalid_arguments():
+
+    result = process_ai_tool_call({
+        "name": "file_exists",
+        "arguments": {}
+    })
+
+    assert result == (
+        "Missing required argument "
+        "'file_path' for tool 'file_exists'."
+    )

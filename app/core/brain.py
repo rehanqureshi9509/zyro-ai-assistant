@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from app.ai.tool_calling import execute_tool_call
 from app.tools.registry import execute_tool
 
 
@@ -341,3 +341,9 @@ def is_exit_command(command):
     command = command.strip().lower()
 
     return command == EXIT_COMMAND
+
+def process_ai_tool_call(tool_call):
+
+    result = execute_tool_call(tool_call)
+
+    return result
